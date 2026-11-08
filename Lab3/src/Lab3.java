@@ -19,6 +19,9 @@ import java.util.Scanner;
 
 public class Lab3 {
 
+    public static Data data;
+    public static Monitor monitor;
+
     public static void main(String[] args) throws IOException, InterruptedException {
         Scanner scanner = new Scanner(System.in);
 
@@ -27,7 +30,9 @@ public class Lab3 {
         int N = scanner.nextInt();
 
         //Створення потоків та монітору
-        Data data = new Data(N);
+        data = new Data(N);
+        monitor = new Monitor(data);
+
         T1 T1 = new T1(data);
         T2 T2 = new T2(data);
         T3 T3 = new T3(data);

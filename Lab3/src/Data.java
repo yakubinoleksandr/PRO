@@ -4,13 +4,13 @@ import java.util.Arrays;
 
 // Спільні дані, обчислювальні функції та методи синхронізації
 public class Data {
-    private final int P = 4;
-    private final int N;
+    public final int P = 4;
+    public final int N;
     public final int H;
 
-    private int a;
-    private int p;
-    private int d;
+    public int a;
+    public int p;
+    public int d;
     public int[] A;
     public int[] B;
     public int[] S;
@@ -18,13 +18,6 @@ public class Data {
     public int[][] MM;
     public int[][] MX;
     public int[][] MT;
-
-    private int inCount; // скільки потоків завершили введення
-    private int calACount; // скільки потоків обчислили частину a
-    private int outCount; // скільки потоків обчислили частину A_H
-    private boolean[] sReady = new boolean[P + 1]; // Ti відсортував S_H
-    private boolean merged = false;
-    private boolean sorted = false;
 
     public Data(int n) {
         N = n;
@@ -90,81 +83,5 @@ public class Data {
             }
             A[i] = p * sma + a * Z[i];
         }
-    }
-
-    // Введення завершено (сигнал від Т1, Т3, Т4)
-    public synchronized void signalIn() {
-        inCount++;
-        notifyAll();
-    }
-
-    public synchronized void waitIn() throws InterruptedException {
-        while (inCount < P - 1) wait();
-    }
-
-    // Частину a обчислено (сигнал від усіх 4 потоків)
-    public synchronized void signalCalcA() {
-        calACount++;
-        notifyAll();
-    }
-
-    public synchronized void waitCalcA() throws InterruptedException {
-        while (calACount < P) wait();
-    }
-
-    // Частину S_H відсортовано: сигнал від Т2 та Т4, очікують Т1 (для Т2) і Т3 (для Т4)
-    public synchronized void signalCalcS(int T) {
-        sReady[T] = true;
-        notifyAll();
-    }
-
-    public synchronized void waitCalcS(int T) throws InterruptedException {
-        while (!sReady[T]) wait();
-    }
-
-    // S_2H (злиття S_H Т3 і Т4) готове: сигнал від Т3, очікує Т1
-    public synchronized void signalMerge() {
-        merged = true;
-        notifyAll();
-    }
-
-    public synchronized void waitMerge() throws InterruptedException {
-        while (!merged) wait();
-    }
-
-    // S відсортовано (сигнал від Т1, очікують Т2, Т3, Т4)
-    public synchronized void signalSort() {
-        sorted = true;
-        notifyAll();
-    }
-
-    public synchronized void waitSort() throws InterruptedException {
-        while (!sorted) wait();
-    }
-
-    // Частину A_H обчислено (сигнал від Т1, Т2, Т3, очікує Т4)
-    public synchronized void signalOut() {
-        outCount++;
-        notifyAll();
-    }
-
-    public synchronized void waitOut() throws InterruptedException {
-        while (outCount < P - 1) wait();
-    }
-
-    // КД1: a = a + a_i
-    public synchronized void addA(int a) {
-        this.a += a;
-    }
-
-    // КД2, КД3, КД4: копіювання d, p, a
-    public synchronized int copyA() {
-        return a;
-    }
-    public synchronized int copyD() {
-        return d;
-    }
-    public synchronized int copyP() {
-        return p;
     }
 }

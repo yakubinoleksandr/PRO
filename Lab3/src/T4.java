@@ -4,12 +4,14 @@ import java.util.Arrays;
 
 public class T4 extends Thread {
 
-    private Data data;
+    private final Data data;
+    private final Monitor monitor;
     private final int START;
     private final int END;
 
     public T4(Data data) {
         this.data = data;
+        this.monitor = Lab3.monitor;
         this.START  = 3 * data.H;
         this.END  = 4 * data.H;
     }
@@ -25,32 +27,32 @@ public class T4 extends Thread {
             data.setD(4);
 
             //Сигнал та очікування про ввід даних
-            data.signalIn();
-            data.waitIn();
+            monitor.signalIn();
+            monitor.waitIn();
 
             //Обрахунок ai = B_H * Z_H та a = a + ai
             int a4 = data.dot(START, END);
-            data.addA(a4);
+            monitor.addA(a4);
 
             //Сигнал та очікування завершення обрахунку а
-            data.signalCalcA();
-            data.waitCalcA();
+            monitor.signalCalcA();
+            monitor.waitCalcA();
 
             //Копіювання d та сортування S_H = sort( d * B_H + Z_H * MM_H)
-            int d = data.copyD();
+            int d = monitor.copyD();
             data.sortS(START, END, d);
 
             //Сигнал про завершення потоком Т4 сортування S_H та очікування завершення сортування
-            data.signalCalcS(4);
-            data.waitSort();
+            monitor.signalCalcS(4);
+            monitor.waitSort();
 
             //Копіювання p і a та обрахунок MA_H = MX * MT_H; A_H = p * (S * MA_H) + a * Z_H
-            int p = data.copyP();
-            int a = data.copyA();
+            int p = monitor.copyP();
+            int a = monitor.copyA();
             data.calcA(START, END, p, a);
 
             //Очікування завершення обчислення
-            data.waitOut();
+            monitor.waitOut();
 
         } catch (InterruptedException e) {
             e.printStackTrace();
