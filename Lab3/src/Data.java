@@ -8,9 +8,9 @@ public class Data {
     public final int N;
     public final int H;
 
-    public int a;
-    public int p;
-    public int d;
+    private int a;
+    private int p;
+    private int d;
     public int[] A;
     public int[] B;
     public int[] S;
@@ -83,5 +83,21 @@ public class Data {
             }
             A[i] = p * sma + a * Z[i];
         }
+    }
+
+    public int getA() {
+        return a;
+    }
+
+    public int getP() {
+        return p;
+    }
+
+    public int getD() {
+        return d;
+    }
+
+    public void setA(int a) {
+        this.a = a;
     }
 }

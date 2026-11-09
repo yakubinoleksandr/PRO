@@ -10,9 +10,17 @@ public class Monitor {
     private boolean merged = false;
     private boolean sorted = false;
 
+    //СР
+    private int a;
+    private int p;
+    private int d;
+
     public Monitor(Data data) {
         this.data = data;
         sReady = new boolean[data.P + 1];
+        a = data.getA();
+        p = data.getP();
+        d = data.getD();
     }
 
     // Введення завершено (сигнал від Т1, Т3, Т4)
@@ -77,17 +85,18 @@ public class Monitor {
 
     // КД1: a = a + a_i
     public synchronized void addA(int a) {
-        data.a += a;
+        this.a += a;
+        data.setA(this.a);
     }
 
     // КД2, КД3, КД4: копіювання d, p, a
     public synchronized int copyA() {
-        return data.a;
+        return a;
     }
     public synchronized int copyD() {
-        return data.d;
+        return d;
     }
     public synchronized int copyP() {
-        return data.p;
+        return p;
     }
 }
