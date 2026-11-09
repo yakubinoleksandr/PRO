@@ -8,7 +8,6 @@ public class Data {
     public final int N;
     public final int H;
 
-    private int a;
     private int p;
     private int d;
     public int[] A;
