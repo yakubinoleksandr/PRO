@@ -66,7 +66,6 @@ public class Data {
     }
 
     // S[from, to) = sort(S[from, middle), S[middle, to))
-
     public void merge(int from, int mid, int to) {
         int[] temp = Arrays.copyOfRange(S, from, to);
         int i = 0;
