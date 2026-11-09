@@ -56,20 +56,38 @@ public class Data {
 
     // S_H = sort(d * B_H + Z * MM_H)
     public void sortS(int from, int to, int d) {
-        int temp = 0;
         for (int i = from; i < to; i++) {
-            for (int j = 0; j < N; j++) temp += Z[j] * MM[j][i];
+            int temp = 0;
+            for (int j = 0; j < N; j++) {
+                temp += Z[j] * MM[j][i];
+            }
             S[i] = d * B[i] + temp;
         }
         Arrays.sort(S, from, to);
     }
 
     // S[from, to) = sort(S[from, middle), S[middle, to))
+
     public void merge(int from, int mid, int to) {
-        int[] t = Arrays.copyOfRange(S, from, mid);
-        int i = 0, j = mid, k = from;
-        while (i < t.length && j < to) S[k++] = t[i] <= S[j] ? t[i++] : S[j++];
-        while (i < t.length) S[k++] = t[i++];
+        int[] temp = Arrays.copyOfRange(S, from, to);
+        int i = 0;
+        int j = mid - from;
+        int k = from;
+        int leftEnd = mid - from;
+        int rightEnd = to - from;
+        while (i < leftEnd && j < rightEnd) {
+            if (temp[i] <= temp[j]) {
+                S[k++] = temp[i++];
+            } else {
+                S[k++] = temp[j++];
+            }
+        }
+        while (i < leftEnd) {
+            S[k++] = temp[i++];
+        }
+        while (j < rightEnd) {
+            S[k++] = temp[j++];
+        }
     }
 
     // A_H = p * (S * (MX * MT_H)) + a * Z_H
@@ -85,19 +103,11 @@ public class Data {
         }
     }
 
-    public int getA() {
-        return a;
-    }
-
     public int getP() {
         return p;
     }
 
     public int getD() {
         return d;
-    }
-
-    public void setA(int a) {
-        this.a = a;
     }
 }
